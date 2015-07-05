@@ -30,6 +30,7 @@ var errorCallback = function(e) {
                           // Do something with the blob object
 
                           console.log('sending blob to server');
+                          console.log( blob);
                           client.send(blob);
                                                                                           
                       },
@@ -38,8 +39,6 @@ var errorCallback = function(e) {
                       );
 
                 }
-              //i.src = canvas.toDataURL('image/webp');
-              //URL.revokeObjectURL(osrc);
                                     
       }
         
@@ -47,7 +46,7 @@ var errorCallback = function(e) {
 
 
 video.addEventListener('click', snapshot, false);
-var inv = setInterval( snapshot, 2000 );
+var inv = setInterval( snapshot, 100 );
         // Not showing vendor prefixes or code that works cross-browser.
       navigator.getUserMedia({video: true}, function(stream) {
             video.src = window.URL.createObjectURL(stream);
@@ -67,7 +66,10 @@ client.on('stream', function(stream, meta) {
 
    stream.on('end', function(){
            console.log('receiving completed from server');
-           image.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
+           blob = new Blob(parts);
+           image.src = (window.URL || window.webkitURL).createObjectURL(blob);
+           console.log(blob);
+           console.log(parts);
                            
        });
     });

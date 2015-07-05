@@ -1,7 +1,7 @@
 {
   "author": "Asutosh Palai",
   "name": "vchato",
-  "version": "0",
+  "version": "0.1",
   "engines": {
     "node": "~v0.4.12"
   },

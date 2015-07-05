@@ -22,56 +22,36 @@ console.log('listening at ' + 9000);
 
 var client1 = null,
     client2 = null;
+var clients = {};
 
 server.on ('connection', function(client) {
   console.log('Received connection from client');
   
-  if(client1 == null){
-    client.num  = 1;
-    client1 = client;
-    console.log('processing client ' + client.num);
-
-    client.on('stream', function(stream, meta){
-      if (client2 == null)
-        return;
-        nclient = client2;
-        outs = nclient.createStream();
-        outs.pipe(stream);
-        
-        stream.on('end', function() {
-          outs.end();
-        });
-    });
-
-    client.on('close', function(){
-      client1 = null;
-    });
-
-  }
-  else if(client2 == null) {
-    client.num  = 2;
-    client2 = client;
-    console.log('processing client ' + client.num);
-
-    client.on('stream', function(stream, meta){
-      if (client1 == null)
-        return;
-        nclient = client1;
-        outs = nclient.createStream();
-        outs.pipe(stream);
-        
-        stream.on('end', function() {
-          outs.end();
-        });
-
-    });
-
-    client.on('close', function(){
-      client2 = null;
-    });
-
-  }
+  if(clients['client0'] == null)
+    client.num = 0;
+  else if(clients['client1'] == null)
+    client.num = 1;
   else {
-    console.log("unused client connecion");
+    console.log('unused client connection');
+    return;
   }
+    clients['client' + client.num] = client;
+    console.log('processing client ' + client.num);
+
+    client.on('stream', function(stream, meta){
+    nclient = clients['client' + ((client.num + 1) % 2)];
+    if (nclient == null)
+        return;
+        outs = nclient.createStream();
+        stream.pipe(outs);
+        
+        stream.on('end', function() {
+          outs.end();
+        });
+    });
+
+    client.on('close', function(){
+      clients['client' + client.num]= null;
+    });
+
 });
