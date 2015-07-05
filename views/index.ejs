@@ -1,0 +1,74 @@
+<video autoplay></video>
+<img src="">
+<canvas style="display:none;"></canvas>
+
+<script src="canvas-toBlob.js"></script>
+<script src="binary.js"></script>
+<script>
+navigator.getUserMedia  = navigator.getUserMedia ||
+                          navigator.webkitGetUserMedia ||
+                                                    navigator.mozGetUserMedia ||
+                                                                              navigator.msGetUserMedia;
+var errorCallback = function(e) {
+      console.log('Reeeejected!', e);
+        
+};
+  var video = document.querySelector('video');
+    var canvas = document.querySelector('canvas');
+    var ctx = canvas.getContext('2d');
+    var localMediaStream = null;
+    var image = document.querySelector('img');
+
+    function snapshot() {
+      if (localMediaStream) {
+                canvas.height = video.videoHeight
+                canvas.width = video.videoWidth
+              ctx.drawImage(video, 0, 0);
+                if (canvas.toBlob) {
+                  canvas.toBlob(
+                      function (blob) {
+                          // Do something with the blob object
+
+                          console.log('sending blob to server');
+                          client.send(blob);
+                                                                                          
+                      },
+                              'image/jpeg'
+                                  
+                      );
+
+                }
+              //i.src = canvas.toDataURL('image/webp');
+              //URL.revokeObjectURL(osrc);
+                                    
+      }
+        
+    }
+
+
+video.addEventListener('click', snapshot, false);
+var inv = setInterval( snapshot, 2000 );
+        // Not showing vendor prefixes or code that works cross-browser.
+      navigator.getUserMedia({video: true}, function(stream) {
+            video.src = window.URL.createObjectURL(stream);
+                localMediaStream = stream;
+                  
+          }, errorCallback);
+
+
+var client = new BinaryClient('ws://localhost:9000');
+client.on('stream', function(stream, meta) {
+           console.log('streaming from server');
+   var parts = [];
+   stream.on('data', function(data){
+           parts.push(data);
+               
+       });
+
+   stream.on('end', function(){
+           console.log('receiving completed from server');
+           image.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
+                           
+       });
+    });
+      </script>

@@ -1,0 +1,17 @@
+{
+  "author": "Asutosh Palai",
+  "name": "vchato",
+  "version": "0",
+  "engines": {
+    "node": "~v0.4.12"
+  },
+  "dependencies": {
+    "express": "2.5.11",
+    "binaryjs": "",
+    "ejs": ""
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "main": "server.js"
+}

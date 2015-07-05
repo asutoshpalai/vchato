@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video straming using websockets</title>
+</head>
+<body>
+  <video autoplay></video>
+
+  <script>
+var errorCallback = function(e) {
+      console.log('Reeeejected!', e);
+        
+};
+navigator.webkitGetUserMedia({video: true, audio: true}, function(localMediaStream) {
+  console.log('asdkfjkasd');
+      var video = document.querySelector('video');
+          video.src = window.URL.createObjectURL(localMediaStream);
+
+}, errorCallback);
+</script>
+
+</body>
+</html>
