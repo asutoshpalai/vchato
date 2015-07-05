@@ -18,6 +18,10 @@ var errorCallback = function(e) {
     var ctx = canvas.getContext('2d');
     var localMediaStream = null;
     var image = document.querySelector('img');
+    var reader  = new FileReader();
+    reader.onloadend = function () {
+      image.src = reader.result;
+    }
 
     function snapshot() {
       if (localMediaStream) {
@@ -29,8 +33,8 @@ var errorCallback = function(e) {
                       function (blob) {
                           // Do something with the blob object
 
-                          console.log('sending blob to server');
-                          console.log( blob);
+                          //console.log('sending blob to server');
+                          //console.log( blob);
                           client.send(blob);
                                                                                           
                       },
@@ -57,7 +61,7 @@ var inv = setInterval( snapshot, 100 );
 
 var client = new BinaryClient('ws://localhost:9000');
 client.on('stream', function(stream, meta) {
-           console.log('streaming from server');
+           //console.log('streaming from server');
    var parts = [];
    stream.on('data', function(data){
            parts.push(data);
@@ -65,11 +69,9 @@ client.on('stream', function(stream, meta) {
        });
 
    stream.on('end', function(){
-           console.log('receiving completed from server');
+           //console.log('receiving completed from server');
            blob = new Blob(parts);
-           image.src = (window.URL || window.webkitURL).createObjectURL(blob);
-           console.log(blob);
-           console.log(parts);
+           reader.readAsDataURL(blob);
                            
        });
     });
