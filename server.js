@@ -17,7 +17,7 @@ app.get('/', function(req, res){
 app.listen(process.env.PORT || 9292);
 
 var BinaryServer = require('binaryjs').BinaryServer;
-var server = BinaryServer({port: 9000});
+var server = BinaryServer({server: app, path: '/socket'});
 console.log('listening at ' + 9000);
 
 var client1 = null,

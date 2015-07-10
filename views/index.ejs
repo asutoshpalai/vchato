@@ -59,7 +59,7 @@ var inv = setInterval( snapshot, 100 );
           }, errorCallback);
 
 
-var client = new BinaryClient('ws://localhost:9000');
+var client = new BinaryClient('ws' + window.location.protocol.slice(4) + '//' + window.location.host + '/socket');
 client.on('stream', function(stream, meta) {
            //console.log('streaming from server');
    var parts = [];
